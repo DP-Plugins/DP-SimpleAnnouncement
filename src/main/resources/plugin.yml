@@ -1,0 +1,9 @@
+name: DP-SimpleAnnouncement
+version: 1.0.0
+main: com.darksoldier1404.dpsa.SimpleAnnouncement
+api-version: 1.16
+authors: [ DEAD_POOLIO_ ]
+depend:
+  - DPP-Core
+commands:
+  dpsa:
