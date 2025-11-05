@@ -1,5 +1,7 @@
 package com.darksoldier1404.dpsa;
 
+import com.darksoldier1404.dppc.annotation.DPPCoreVersion;
+import com.darksoldier1404.dppc.data.DPlugin;
 import com.darksoldier1404.dppc.utils.ColorUtils;
 import com.darksoldier1404.dppc.utils.ConfigUtils;
 import com.darksoldier1404.dppc.utils.PluginUtil;
@@ -8,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,11 +18,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SimpleAnnouncement extends JavaPlugin implements CommandExecutor, TabCompleter {
+@DPPCoreVersion(since = "5.3.0")
+public class SimpleAnnouncement extends DPlugin implements CommandExecutor, TabCompleter {
     public static SimpleAnnouncement plugin;
     public static YamlConfiguration config;
     public static String prefix;
     public static BukkitTask task;
+
+    public SimpleAnnouncement() {
+        super(false);
+        plugin = this;
+        init();
+        config = plugin.getConfig();
+        prefix = plugin.getPrefix();
+    }
 
     public static SimpleAnnouncement getInstance() {
         return plugin;
@@ -35,13 +45,13 @@ public class SimpleAnnouncement extends JavaPlugin implements CommandExecutor, T
 
     @Override
     public void onEnable() {
-        init();
         getCommand("dpsa").setExecutor(this);
+        startAnnouncementTask();
     }
 
     @Override
     public void onDisable() {
-        save();
+        saveAllData();
     }
 
     @Override
@@ -161,12 +171,6 @@ public class SimpleAnnouncement extends JavaPlugin implements CommandExecutor, T
             return Arrays.asList("random", "sequential");
         }
         return Collections.emptyList();
-    }
-
-    public static void init() {
-        config = ConfigUtils.loadDefaultPluginConfig(plugin);
-        prefix = ColorUtils.applyColor(config.getString("Settings.prefix"));
-        startAnnouncementTask();
     }
 
     public static void save() {
